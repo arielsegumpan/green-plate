@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🌿 GreenPlate
+<img width="150" height="150" alt="gp_logo" src="https://github.com/user-attachments/assets/4871beaf-ad5b-427a-9332-23ff22aecdaf" />
 
 ### **Web-based Decentralized Food Surplus Management and Distribution Platform**
 
