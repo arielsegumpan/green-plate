@@ -114,8 +114,8 @@ GreenPlate supports the following SDGs:
 
 | Layer | Technology |
 |--------|------------|
-| 🎨 Frontend | HTML5, CSS3, Bootstrap, JavaScript |
-| ⚙️ Backend | PHP 8.x (Laravel Framework) |
+| 🎨 Frontend | HTML5, CSS3, Tailwind Css, JavaScript |
+| ⚙️ Backend | PHP 8.x |
 | 🗄️ Database | MySQL |
 | 🗺️ Maps | OpenStreetMap (Leaflet) / Google Maps API |
 | 📈 Charts | Chart.js |
