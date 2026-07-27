@@ -22,13 +22,14 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 #[Fillable(['name', 'avatar', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes, HasRoles;
 
     /**
      * Get the attributes that should be cast.
@@ -45,10 +46,7 @@ class User extends Authenticatable
 
     public function organizations(): BelongsToMany
     {
-        return $this->belongsToMany(
-            Organization::class,
-            'organization_members'
-        );
+        return $this->belongsToMany(Organization::class, 'organization_user', 'user_id', 'organization_id');
     }
 
     public function vehicle(): HasOne
@@ -64,12 +62,12 @@ class User extends Authenticatable
 
     public function getTenant(Panel $panel): Collection
     {
-        return $this->tenant;
+        return $this->organizations;
     }
 
     public function canAccessTenant(Model $tenant): bool
     {
-        return $this->shops()->whereKey($tenant)->exists();
+        return $this->organizations()->whereKey($tenant)->exists();
     }
 
     public function canAccessPanel(Panel $panel): bool
@@ -91,9 +89,8 @@ class User extends Authenticatable
 
         return match ($role) {
             'super_admin'   => Filament::getPanel('dashboard')->getUrl(),
-            'shop_owner'    => $this->getClientPanelUrl(),
-            'mechanic'      => Filament::getPanel('mechanic')->getUrl(),
-            'guest'         => route('home'),
+            'organization'    => $this->getClientPanelUrl(),
+            'driver'         => route('home.page'),
             default         => route('filament.auth.auth.login'),
         };
     }
@@ -101,20 +98,20 @@ class User extends Authenticatable
 
     protected function getClientPanelUrl(): string
     {
-        $tenants = $this->shops;
+        $orgs = $this->organizations;
 
         // if($tenants === null){
         //     return route('filament.myshop.tenant.registration');
         // }
 
-        if ($tenants->isEmpty()) {
+        if ($orgs->isEmpty()) {
             return route('filament.auth.auth.login');
         }
 
         // If only one netShop, redirect directly
-        if ($tenants->count() === 1) {
-            $panel = Filament::getPanel('myshop');
-            return $panel->getUrl($tenants->first());
+        if ($orgs->count() === 1) {
+            $panel = Filament::getPanel('organization');
+            return $panel->getUrl($orgs->first());
         }
 
         // If multiple tenants, you could:
@@ -122,8 +119,8 @@ class User extends Authenticatable
         // 2. Redirect to a tenant selection page
         // 3. Use the last accessed tenant (stored in session)
 
-        $panel = Filament::getPanel('myshop');
-        return $panel->getUrl($tenants->first());
+        $panel = Filament::getPanel('organization');
+        return $panel->getUrl($orgs->first());
     }
 
 }

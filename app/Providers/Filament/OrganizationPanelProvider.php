@@ -2,9 +2,14 @@
 
 namespace App\Providers\Filament;
 
-use App\Http\Middleware\PanelRoleMiddleware;
-use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use App\Filament\Pages\EditOrganizationProfile;
+use App\Filament\Pages\RegisterOrganization;
+use App\Http\Middleware\ApplyOrganizationsScope;
+use App\Http\Middleware\Filament\ApplyFilamentTenantThemeMiddleware;
+use App\Models\Organization;
+use Filafly\Icons\Phosphor\Enums\Phosphor;
 use Filafly\Icons\Phosphor\PhosphorIcons;
+use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -22,13 +27,13 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class DashboardPanelProvider extends PanelProvider
+class OrganizationPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->id('dashboard')
-            ->path('dashboard')
+            ->id('organization')
+            ->path('organization')
             ->colors([
                 'primary' => Color::Green,
             ])
@@ -36,18 +41,20 @@ class DashboardPanelProvider extends PanelProvider
             ->sidebarWidth('15rem')
             ->spa(hasPrefetching: true)
             ->brandLogo(asset('imgs/gp_logo.png', true))
-            ->brandLogoHeight('4rem')
+            ->brandLogoHeight('2.5rem')
             ->favicon(asset('imgs/gp_logo.png'))
             ->topBar(false)
             ->sidebarCollapsibleOnDesktop()
-            ->discoverResources(in: app_path('Filament/Dashboard/Resources'), for: 'App\Filament\Dashboard\Resources')
-            ->discoverPages(in: app_path('Filament/Dashboard/Pages'), for: 'App\Filament\Dashboard\Pages')
+            ->profile()
+            ->discoverResources(in: app_path('Filament/Organization/Resources'), for: 'App\Filament\Organization\Resources')
+            ->discoverPages(in: app_path('Filament/Organization/Pages'), for: 'App\Filament\Organization\Pages')
             ->pages([
                 Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Dashboard/Widgets'), for: 'App\Filament\Dashboard\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Organization/Widgets'), for: 'App\Filament\Organization\Widgets')
             ->widgets([
                 AccountWidget::class,
+                FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -59,20 +66,22 @@ class DashboardPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                PanelRoleMiddleware::class
-            ])
-            ->plugins([
-                FilamentShieldPlugin::make()
-                    ->navigationLabel('Roles')
-                    ->activeNavigationIcon('heroicon-s-shield-check')
-                    ->navigationGroup('User Mgmt')
-                    ->navigationSort(20)
-                    ->navigationBadgeColor('success'),
-                PhosphorIcons::make()->light(),
             ])
             ->authMiddleware([
                 Authenticate::class,
-
+            ])
+            ->plugins([
+                PhosphorIcons::make()->light(),
+            ])
+            ->tenant(Organization::class, ownershipRelationship: 'users', slugAttribute: 'org_slug') // tanan nga tenant
+            ->tenantMiddleware([
+                ApplyOrganizationsScope::class, // dugang global scope sa tanan nga tenant
+                ApplyFilamentTenantThemeMiddleware::class // dugang theme sa tanan nga tenant
+            ], isPersistent: true) // persistent para indi mawala ang middleware sa tanan nga routes sa panel
+            ->tenantRegistration(RegisterOrganization::class) // custom registration page para sa tanan nga tenant
+            ->tenantProfile(EditOrganizationProfile::class) // custom profile page para sa tanan nga tenant
+            ->tenantMenuItems([
+                'register' => fn (Action $action) => $action->label('Create New Organization')->icon(Phosphor::Plus)->color('primary'), // custom menu item para sa tanan nga tenant
             ]);
     }
 }

@@ -2,6 +2,11 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Registration;
+use App\Http\Middleware\PanelRoleMiddleware;
+use Caresome\FilamentAuthDesigner\AuthDesignerPlugin;
+use Caresome\FilamentAuthDesigner\Enums\MediaPosition;
+use Filafly\Icons\Phosphor\PhosphorIcons;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -60,6 +65,35 @@ class AuthPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+                PanelRoleMiddleware::class
+            ])
+             ->plugins([
+                AuthDesignerPlugin::make()
+                ->defaults(fn ($config) => $config
+                    ->media(asset('imgs/hero_img2.jpg'))
+                    ->mediaPosition(MediaPosition::Right)
+                    ->mediaSize('50%')
+                )
+                ->login(fn ($config) => $config
+                    ->media(asset('imgs/hero_img2.jpg'))
+                    ->mediaPosition(MediaPosition::Right)
+                    ->mediaSize('50%')
+                    ->themeToggle(bottom: '2rem', left: '2rem')
+                )
+                ->registration(fn ($config) => $config
+                    ->media(asset('imgs/hero_img2.jpg'))
+                    ->mediaPosition(MediaPosition::Right)
+                    ->mediaSize('50%')
+                    ->themeToggle(bottom: '2rem', left: '2rem')
+                    ->usingPage(Registration::class))
+
+                ->passwordReset(fn ($config) => $config
+                    ->mediaPosition(MediaPosition::Right)
+                    ->mediaSize('50%')
+                )
+                ->themeToggle(),
+
+                PhosphorIcons::make()->light()
             ]);
     }
 }
