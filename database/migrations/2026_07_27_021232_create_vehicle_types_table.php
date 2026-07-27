@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('vehicle_types', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->constrained('tenants')->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
             $table->string('type_name')->unique();
             $table->string('type_desc')->nullable();
             $table->timestamps();

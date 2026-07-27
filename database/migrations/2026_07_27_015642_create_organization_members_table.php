@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('organization_members', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->constrained('tenants')->cascadeOnDelete();
             $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('position')->nullable();

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
-    'tenant_id',
+    'organization_id',
     'address',
     'city',
     'province',
@@ -36,14 +36,9 @@ class Location extends Model
         ];
     }
 
-    public function tenant(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Tenant::class, 'tenant_id', 'id');
-    }
-
-    public function organizations(): HasMany
-    {
-        return $this->hasMany(Organization::class, 'location_id', 'id');
+        return $this->belongsTo(Organization::class, 'organization_id', 'id');
     }
 
     public function donations(): HasMany

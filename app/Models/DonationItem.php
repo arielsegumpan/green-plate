@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['tenant_id', 'donation_id', 'food_category_id', 'food_name', 'food_desc', 'quantity', 'unit', 'expires_at'])]
+#[Fillable(['organization_id', 'donation_id', 'food_category_id', 'food_name', 'food_desc', 'quantity', 'unit', 'expires_at'])]
 class DonationItem extends Model
 {
     use SoftDeletes;
 
-    public function tenant() : BelongsTo
+    public function organization() : BelongsTo
     {
-        return $this->belongsTo(Tenant::class, 'tenant_id', 'id');
+        return $this->belongsTo(Organization::class, 'organization_id', 'id');
     }
 
     public function donation() : BelongsTo
@@ -25,7 +25,7 @@ class DonationItem extends Model
 
     public function foodCategory() : BelongsTo
     {
-        return $this->belongsTo(Category::class, 'food_category_id', 'id');
+        return $this->belongsTo(FoodCategory::class, 'food_category_id', 'id');
     }
 
     public function foodImages() : HasMany

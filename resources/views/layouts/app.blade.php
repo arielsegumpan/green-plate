@@ -25,7 +25,7 @@
     </head>
     <body class="bg-[#f5f0ed] dark:bg-neutral-900 antialiased">
         @include('layouts.partials.navigation')
-
+        <livewire:public.home.heroblock />
         <main class="max-w-[85rem] mx-auto">
             {{ $slot }}
         </main>
@@ -39,6 +39,29 @@
             document.addEventListener("livewire:navigated", () => {
                 window.HSStaticMethods.autoInit();
             })
+
+            document.addEventListener("DOMContentLoaded", () => {
+            const navbar = document.getElementById("navbar");
+
+            window.addEventListener("scroll", () => {
+                if (window.scrollY > 40) {
+                    navbar.classList.add(
+                        "bg-white/80",
+                        "dark:bg-neutral-900/70",
+                        "backdrop-blur-2xl",
+                        "shadow-lg"
+                    );
+                } else {
+                    navbar.classList.remove(
+                        "bg-white/80",
+                        "dark:bg-neutral-900/70",
+                        "backdrop-blur-2xl",
+                        "shadow-lg"
+                    );
+                }
+            });
+        });
         </script>
+
     </body>
 </html>

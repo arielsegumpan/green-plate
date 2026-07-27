@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('routes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->constrained('tenants')->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
             $table->foreignId('delivery_id')->constrained('deliveries')->cascadeOnDelete();
             $table->string('routing_engine');
             $table->decimal('total_distance', 8, 2);
             $table->integer('estimated_time');
+            $table->decimal('actual_distance', 8, 2)->nullable();
+            $table->integer('actual_time')->nullable();
             $table->json('polyline');
             $table->timestamps();
         });

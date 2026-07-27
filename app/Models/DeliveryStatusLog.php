@@ -6,17 +6,17 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['tenant_id', 'delivery_id', 'status', 'remarks'])]
+#[Fillable(['organization_id', 'delivery_id', 'status', 'remarks'])]
 class DeliveryStatusLog extends Model
 {
-    public function tenant() : BelongsTo
+    public function organization() : BelongsTo
     {
-        return $this->belongsTo(Tenant::class, 'tenant_id', 'id');
+        return $this->belongsTo(Organization::class, 'organization_id', 'id');
     }
 
     public function delivery() : BelongsTo
     {
-        return $this->belongsT(Delivery::class, 'delivery_id', 'id');
+        return $this->belongsTo(Delivery::class, 'delivery_id', 'id');
     }
 
     public function user() : BelongsTo

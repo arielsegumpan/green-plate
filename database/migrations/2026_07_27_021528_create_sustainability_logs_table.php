@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sustainability_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->constrained('tenants')->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
             $table->foreignId('delivery_id')->constrained('deliveries')->cascadeOnDelete();
             $table->decimal('food_saved_kg', 10, 2);
             $table->decimal('co2_saved_kg', 10, 2);

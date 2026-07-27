@@ -1,4 +1,4 @@
-<!-- Header -->
+{{-- <!-- Header -->
 <header class="flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full text-sm py-3 md:py-0">
     <nav class="max-w-[85rem] w-full mx-auto px-4 md:px-6 lg:px-8">
         <div class="relative md:flex md:items-center md:justify-between">
@@ -41,4 +41,57 @@
         </div>
     </nav>
 </header>
-<!-- End Header -->
+<!-- End Header --> --}}
+<!-- Header -->
+<header
+    id="navbar"
+    class="fixed top-0 inset-x-0 z-50 transition-all duration-300 w-full text-sm ">
+
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="flex h-20 items-center justify-between">
+
+            <!-- Logo -->
+            <a href="{{ route('home.page') }}" class="flex items-center">
+                <img
+                    src="{{ asset('imgs/gp_logo.png') }}"
+                    alt="{{ config('app.name') }}"
+                    class="h-12 w-auto">
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center gap-8">
+
+                @include('layouts.partials.nav-items')
+
+            </div>
+
+            <!-- Mobile Toggle -->
+            <button
+                class="md:hidden hs-collapse-toggle size-10 flex justify-center items-center rounded-lg text-white"
+                data-hs-collapse="#mobile-menu">
+
+                <svg class="size-6" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+
+            </button> 
+
+        </div>
+
+        <!-- Mobile Menu -->
+        <div
+            id="mobile-menu"
+            class="hs-collapse hidden md:hidden pb-6">
+
+            @include('layouts.partials.nav-items')
+
+        </div>
+
+    </nav>
+
+</header>

@@ -8,17 +8,9 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable([ 'tenant_id', 'organization_id', 'user_id', 'position' ])]
+#[Fillable([ 'organization_id', 'user_id', 'position' ])]
 class OrganizationMember extends Model
 {
-    protected $table = 'organization_members';
-
-    public $timestamps = true;
-
-    public function tenant(): BelongsTo
-    {
-        return $this->belongsTo(Tenant::class, 'tenant_id', 'id');
-    }
 
     public function organization(): BelongsTo
     {

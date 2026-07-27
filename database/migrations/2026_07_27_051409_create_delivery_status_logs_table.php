@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('delivery_status_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->constrained('tenants')->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
             $table->foreignId('delivery_id')->constrained('deliveries')->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->enum('status', [

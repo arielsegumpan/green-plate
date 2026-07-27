@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
-
-            $table->foreignId('tenant_id')->constrained('tenants')->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('vehicle_type_id')->constrained('vehicle_types')->cascadeOnDelete();
             $table->decimal('capacity_kg', 8, 2);

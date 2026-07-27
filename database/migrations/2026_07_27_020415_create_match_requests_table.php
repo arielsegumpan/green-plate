@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('match_requests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->constrained('tenants')->cascadeOnDelete();
             $table->foreignId('donation_id')->constrained('donations')->cascadeOnDelete();
             $table->foreignId('recipient_request_id')->constrained('recipient_requests')->cascadeOnDelete();
             $table->decimal('matching_score', 5, 2);
@@ -23,6 +22,7 @@ return new class extends Migration
                 'accepted',
                 'rejected'
             ]);
+            $table->timestamps();
         });
     }
 

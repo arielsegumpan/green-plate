@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('donation_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->constrained('tenants')->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
             $table->foreignId('donation_id')->constrained('donations')->cascadeOnDelete();
             $table->foreignId('food_category_id')->constrained('food_categories')->cascadeOnDelete();
             $table->string('food_name');

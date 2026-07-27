@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('donations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->constrained('tenants')->cascadeOnDelete();
             $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
             $table->foreignId('pickup_location_id')->constrained('locations')->cascadeOnDelete();
             $table->string('reference_no')->unique();

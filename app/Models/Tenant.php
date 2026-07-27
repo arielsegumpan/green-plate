@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 #[Fillable(['name', 'slug', 'email', 'phone', 'domain', 'logo', 'status', 'settings'])]
 class Tenant extends Model
 {
-     use SoftDeletes;
+    use SoftDeletes;
     /**
      * Get the attributes that should be cast.
      *
@@ -23,7 +23,7 @@ class Tenant extends Model
         ];
     }
 
-    public function users() : HasMany
+    public function users(): HasMany
     {
         return $this->hasMany(User::class, 'tenant_id', 'id');
     }
@@ -56,5 +56,50 @@ class Tenant extends Model
     public function sustainabilityLogs(): HasMany
     {
         return $this->hasMany(SustainabilityLog::class, 'tenant_id', 'id');
+    }
+
+    public function routes(): HasMany
+    {
+        return $this->hasMany(Route::class, 'tenant_id', 'id');
+    }
+
+    public function categories(): HasMany
+    {
+        return $this->hasMany(Category::class, 'tenant_id', 'id');
+    }
+
+    public function foodCategories(): HasMany
+    {
+        return $this->hasMany(FoodCategory::class, 'tenant_id', 'id');
+    }
+
+    public function foodImages(): HasMany
+    {
+        return $this->hasMany(FoodImage::class, 'tenant_id', 'id');
+    }
+
+    public function vehicles() : HasMany
+    {
+        return $this->hasMany(Vehicle::class, 'tenant_id', 'id');
+    }
+
+    public function vehicleTypes() : HasMany
+    {
+        return $this->hasMany(VehicleType::class, 'tenant_id', 'id');
+    }
+
+    public function matchRequests() : HasMany
+    {
+        return $this->hasMany(MatchRequest::class, 'tenant_id', 'id');
+    }
+
+    public function deliveryStatusLogs() : HasMany
+    {
+        return $this->hasMany(DeliveryStatusLog::class, 'tenant_id', 'id');
+    }
+
+    public function organizationMembers() : HasMany
+    {
+        return $this->hasMany(OrganizationMember::class, 'tenant_id', 'id');
     }
 }

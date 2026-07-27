@@ -13,10 +13,14 @@ return new class extends Migration
     {
         Schema::create('recipient_requests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->constrained('tenants')->cascadeOnDelete();
             $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
             $table->integer('required_meals');
-            $table->integer('priority')->default(1);
+            $table->enum('priority', [
+                'low',
+                'normal',
+                'high',
+                'urgent'
+            ])->default('normal');
             $table->text('remarks')->nullable();
             $table->timestamps();
         });

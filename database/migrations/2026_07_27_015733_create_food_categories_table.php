@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('food_categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->nullable()->constrained('tenants')->cascadeOnDelete();
-            $table->string('name');
+            $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
+            $table->string('name')->unique();
             $table->decimal('co2_factor', 8, 2)->nullable();
             $table->decimal('meal_ratio', 8, 2)->nullable();
             $table->timestamps();
+            $table->index(['organization_id','name']);
         });
     }
 

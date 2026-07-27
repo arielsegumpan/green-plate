@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('deliveries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->constrained('tenants')->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
             $table->foreignId('match_id')->constrained('match_requests')->cascadeOnDelete();
             $table->foreignId('driver_id')->constrained('users')->cascadeOnDelete();
             $table->decimal('distance', 8, 2)->nullable();

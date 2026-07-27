@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Category;
+use App\Models\Organization;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,12 +13,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('food_images', function (Blueprint $table) {
+        Schema::create('category_organization', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
-            $table->foreignId('donation_item_id')->constrained('donation_items')->cascadeOnDelete();
-            $table->string('img_path');
-            $table->string('img_alt')->nullable();
+            $table->foreignIdFor(Category::class, 'category_id')->constrained('categories')->cascadeOnDelete();
+            $table->foreignIdFor(Organization::class, 'organization_id')->constrained('organizations')->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('food_images');
+        Schema::dropIfExists('category_organization');
     }
 };

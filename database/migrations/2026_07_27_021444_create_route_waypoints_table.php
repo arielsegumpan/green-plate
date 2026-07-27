@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('route_waypoints', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
             $table->foreignId('route_id')->constrained('routes')->cascadeOnDelete();
             $table->foreignId('location_id')->constrained('locations')->cascadeOnDelete();
             $table->integer('sequence');

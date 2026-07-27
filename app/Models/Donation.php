@@ -13,14 +13,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
-#[Fillable(['tenant_id', 'organization_id', 'pickup_location_id', 'reference_no', 'available_from', 'expires_at', 'status'])]
+#[Fillable(['organization_id', 'pickup_location_id', 'reference_no', 'available_from', 'expires_at', 'status'])]
 class Donation extends Model
 {
-    public function tenant() : BelongsTo
-    {
-        return $this->belongsTo(Tenant::class, 'tenant_id', 'id');
-    }
-
     public function organization() : BelongsTo
     {
         return $this->belongsTo(Organization::class, 'organization_id', 'id');

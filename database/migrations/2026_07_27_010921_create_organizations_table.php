@@ -13,22 +13,26 @@ return new class extends Migration
     {
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->constrained('tenants')->cascadeOnDelete();
-            $table->foreignId('location_id')->constrained('locations')->cascadeOnDelete();
-            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->string('org_name');
+            $table->string('org_slug')->unique();
+            $table->string('org_email')->nullable()->unique();
+            $table->string('org_contact_number')->nullable();
             $table->string('org_logo')->nullable();
+            $table->enum('status', [
+                'active',
+                'inactive',
+                'suspended'
+            ])->default('active');
             $table->enum('type', [
                 'donor',
                 'recipient',
                 'both'
             ]);
-            $table->string('contact_number');
-            $table->string('email')->nullable()->unique();
             $table->text('org_desc')->nullable();
+            $table->json('other_details')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->index(['org_name', 'email']);
+            $table->index(['org_name', 'org_slug', 'org_email']);
         });
     }
 

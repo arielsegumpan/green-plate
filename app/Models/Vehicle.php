@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['tenant_id', 'user_id', 'vehicle_type_id', 'capacity_kg', 'plate_no'])]
+#[Fillable(['organization_id', 'user_id', 'vehicle_type_id', 'capacity_kg', 'plate_no'])]
 class Vehicle extends Model
 {
-    public function tenant() : BelongsTo
+    public function organization() : BelongsTo
     {
-        return $this->belongsTo(Tenant::class, 'tenant_id', 'id');
+        return $this->belongsTo(Organization::class, 'organization_id', 'id');
     }
 
 

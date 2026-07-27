@@ -4,14 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['tenant_id', 'name', 'co2_factor', 'meal_ratio'])]
+#[Fillable(['organization_id', 'name', 'co2_factor', 'meal_ratio'])]
 class FoodCategory extends Model
 {
-    public function tenant()
+    public function organization() : BelongsTo
     {
-        return $this->belongsTo(Tenant::class, 'tenant_id', 'id');
+        return $this->belongsTo(Organization::class, 'organization_id', 'id');
     }
 
     public function donationItems() : HasMany
