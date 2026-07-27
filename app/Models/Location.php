@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\Donation;
 use App\Models\Organization;
 use App\Models\RouteWaypoint;
-use App\Models\Tenant;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
