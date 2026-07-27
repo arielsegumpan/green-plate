@@ -29,7 +29,7 @@ class ApplyOrganizationsScope
         if ($tenant = Filament::getTenant()) {
             foreach ($this->tenantScopedModels as $model) {
                 $model::addGlobalScope(
-                    'tenant',
+                    'organization',
                     fn (Builder $query) => $query->whereBelongsTo($tenant),
                 );
             }

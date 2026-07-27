@@ -6,6 +6,7 @@ use App\Filament\Pages\EditOrganizationProfile;
 use App\Filament\Pages\RegisterOrganization;
 use App\Http\Middleware\ApplyOrganizationsScope;
 use App\Http\Middleware\Filament\ApplyFilamentTenantThemeMiddleware;
+use App\Http\Middleware\PanelRoleMiddleware;
 use App\Models\Organization;
 use Filafly\Icons\Phosphor\Enums\Phosphor;
 use Filafly\Icons\Phosphor\PhosphorIcons;
@@ -66,6 +67,7 @@ class OrganizationPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                PanelRoleMiddleware::class
             ])
             ->authMiddleware([
                 Authenticate::class,

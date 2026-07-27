@@ -72,7 +72,7 @@ class PanelRoleMiddleware
             }
 
             // If shop owner has no shops, redirect to tenant registration
-            return redirect()->route('filament.myshop.tenant.registration');
+            return redirect()->route('filament.organization.tenant.registration');
         }
 
         if( $user->hasRole('mechanic')) {

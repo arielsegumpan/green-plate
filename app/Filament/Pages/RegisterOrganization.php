@@ -3,7 +3,6 @@
 namespace App\Filament\Pages;
 
 use App\Models\Organization;
-use App\Models\Tenant;
 use Fahiem\FilamentPinpoint\Pinpoint;
 use Filafly\Icons\Phosphor\Enums\Phosphor;
 use Filament\Forms\Components\FileUpload;
@@ -159,7 +158,7 @@ class RegisterOrganization extends RegisterTenant
     }
 
 
-    protected function handleRegistration(array $data): Tenant
+    protected function handleRegistration(array $data): Organization
     {
 
         $data['status'] = 'active';
@@ -169,11 +168,6 @@ class RegisterOrganization extends RegisterTenant
         $this->orgNotif();
         return $org;
     }
-
-    // protected function generateShopId(): string
-    // {
-    //     return Str::upper('BLKIT' . '-' . Str::random(6));
-    // }
 
     protected function orgNotif(): void
     {
