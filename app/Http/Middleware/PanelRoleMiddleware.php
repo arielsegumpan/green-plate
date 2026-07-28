@@ -75,9 +75,9 @@ class PanelRoleMiddleware
             return redirect()->route('filament.organization.tenant.registration');
         }
 
-        if( $user->hasRole('mechanic')) {
-            return redirect()->to(Filament::getPanel('mechanic')->getUrl());
-        }
+        // if( $user->hasRole('mechanic')) {
+        //     return redirect()->to(Filament::getPanel('mechanic')->getUrl());
+        // }
 
         // Guest role → homepage
         if ($user->hasRole('guest')) {

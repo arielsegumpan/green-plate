@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Http\Middleware\PanelRoleMiddleware;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use Filafly\Icons\Phosphor\Enums\Phosphor;
 use Filafly\Icons\Phosphor\PhosphorIcons;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -13,6 +14,7 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsIconAlias;
 use Filament\Widgets\AccountWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -67,11 +69,12 @@ class DashboardPanelProvider extends PanelProvider
                     ->navigationGroup('User Mgmt')
                     ->navigationSort(20)
                     ->navigationBadgeColor('success'),
-                PhosphorIcons::make()->light(),
+                PhosphorIcons::make()
+                    ->light()
+                    ->overrideAlias(PanelsIconAlias::PAGES_DASHBOARD_NAVIGATION_ITEM, Phosphor::Speedometer),
             ])
             ->authMiddleware([
                 Authenticate::class,
-
             ]);
     }
 }

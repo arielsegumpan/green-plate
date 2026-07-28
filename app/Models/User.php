@@ -76,8 +76,8 @@ class User extends Authenticatable
 
         return match ($panelId) {
             'dashboard' => $this->hasRole('super_admin'),
-            'myshop' => $this->hasAnyRole(['shop_owner', 'super_admin']),
-            'mechanic' => $this->hasAnyRole(['mechanic', 'super_admin']),
+            'organization' => $this->hasAnyRole(['organization', 'super_admin']),
+            // 'driver' => $this->hasAnyRole(['driver', 'super_admin']),
             'auth' => true,
             default => false,
         };
@@ -90,7 +90,7 @@ class User extends Authenticatable
         return match ($role) {
             'super_admin'   => Filament::getPanel('dashboard')->getUrl(),
             'organization'    => $this->getClientPanelUrl(),
-            'driver'         => route('home.page'),
+            'driver'         => route('driver.page'),
             default         => route('filament.auth.auth.login'),
         };
     }

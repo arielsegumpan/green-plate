@@ -2,10 +2,12 @@
 
 namespace App\Filament\Pages;
 
+use App\Enums\OrganizationTypeEnums;
 use App\Models\Organization;
 use Fahiem\FilamentPinpoint\Pinpoint;
 use Filafly\Icons\Phosphor\Enums\Phosphor;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Pages\Tenancy\RegisterTenant;
@@ -34,35 +36,48 @@ class RegisterOrganization extends RegisterTenant
             ->components([
 
                 Wizard::make([
-                    Step::make('Shop Details')
-                        ->description('Provide your shop information to get started.')
+                    Step::make('Organization Information')
+                        ->description('Enter your organization information below.')
                         ->icon(Phosphor::Storefront)
                         ->completedIcon(Phosphor::CheckCircle)
                         ->schema([
                             Group::make([
-                                FileUpload::make('shop_logo')
-                                    ->label('Shop Logo')
+                                FileUpload::make('org_logo')
+                                    ->label("Your Organization's Logo")
                                     ->required()
                                     ->image()
                                     ->imageEditor()
                                     ->disk('public')
-                                    ->directory('shop_uploads')
+                                    ->directory('org_uploads')
                                     ->visibility('public')
                                     ->columnSpan([
                                         'default' => 1,
                                         'md' => 2,
                                         'lg' => 2,
-                                    ]),
+                                    ])
+                                    ->maxSize(512)
+                                    ->validationMessages([
+                                            'required' => 'Please upload an organization logo.',
+                                            'image' => 'The uploaded file must be an image.',
+                                            'maxSize' => 'The uploaded file must be less than 512kb.',
+                                        ]),
 
                                 Group::make([
-                                    TextInput::make('shop_name')
+                                    TextInput::make('org_name')
+                                        ->label('Name')
                                         ->required()
                                         ->trim()
                                         ->maxLength(255)
                                         ->scopedUnique()
                                         ->live(onBlur: true)
-                                        ->afterStateUpdated(fn(Set $set, ?string $state) => $set('shop_slug', Str::slug($state))),
-                                    TextInput::make('shop_slug')
+                                        ->unique(table: 'organizations', column: 'org_name')
+                                        ->afterStateUpdated(fn(Set $set, ?string $state) => $set('org_slug', Str::slug($state)))
+                                        ->validationMessages([
+                                            'required' => 'Please enter an organization name.',
+                                            'unique' => 'This organization name is already taken.',
+                                        ]),
+
+                                    TextInput::make('org_slug')
                                         ->required()
                                         ->trim()
                                         ->maxLength(255)
@@ -70,21 +85,39 @@ class RegisterOrganization extends RegisterTenant
                                         ->dehydrated()
                                         ->scopedUnique(),
 
-                                    TextInput::make('shop_email')
-                                        ->email()
-                                        ->trim()
-                                        ->required()
-                                        ->suffixIcon(Heroicon::Envelope)
-                                        ->maxLength(255)
-                                        ->columnSpanFull(),
+                                    Group::make([
+                                        TextInput::make('org_email')
+                                            ->email()
+                                            ->trim()
+                                            ->required()
+                                            ->suffixIcon(Phosphor::Envelope)
+                                            ->maxLength(255),
 
-                                    TextInput::make('shop_phone')
+                                        Select::make('type')
+                                            ->required()
+                                            ->native(false)
+                                            ->options(OrganizationTypeEnums::class)
+                                            ->default(OrganizationTypeEnums::RECIPIENT)
+                                            ->dehydrated()
+                                    ])
+                                        ->columnSpanFull()
+                                        ->columns([
+                                            'default' => 1,
+                                            'sm' => 1,
+                                            'md' => 2,
+                                            'lg' => 2
+                                        ]),
+
+                                    TextInput::make('org_contact_number')
                                         ->tel()
                                         ->trim()
                                         ->required()
-                                        ->suffixIcon(Heroicon::Phone)
+                                        ->suffixIcon(Phosphor::Phone)
                                         ->maxLength(255)
                                         ->columnSpanFull(),
+
+
+
 
                                 ])
                                     ->columns(2)
@@ -142,7 +175,7 @@ class RegisterOrganization extends RegisterTenant
                 ])
                     ->submitAction(new HtmlString(Blade::render(<<<'BLADE'
                         <x-filament::button type="submit" size="sm">
-                            Register Shop
+                            Register Organization
                         </x-filament::button>
                     BLADE)))
 
