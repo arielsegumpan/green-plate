@@ -11,6 +11,7 @@ use App\Filament\Organization\Resources\Categories\Schemas\CategoryInfolist;
 use App\Filament\Organization\Resources\Categories\Tables\CategoriesTable;
 use App\Models\Category;
 use BackedEnum;
+use Filafly\Icons\Phosphor\Enums\Phosphor;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -20,7 +21,7 @@ class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Phosphor::Stack;
 
     protected static ?string $recordTitleAttribute = 'cat_name';
 

@@ -75,16 +75,13 @@ class PanelRoleMiddleware
             return redirect()->route('filament.organization.tenant.registration');
         }
 
-        // if( $user->hasRole('mechanic')) {
-        //     return redirect()->to(Filament::getPanel('mechanic')->getUrl());
-        // }
-
         // Guest role → homepage
         if ($user->hasRole('guest')) {
             return redirect()->to('/');
         }
 
         // No recognized role or no role at all → login
+         auth()->logout(); // Log the user out halin sa gwa kag panel
         return redirect()->route('filament.auth.auth.login');
     }
 

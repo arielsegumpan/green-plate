@@ -30,7 +30,7 @@ class Registration extends BaseRegister
         $sanitizedData = $this->sanitizeInputData($data);
 
         $user = User::create($sanitizedData);
-        $this->assignUserProfileRole($user);
+        // $this->assignUserProfileRole($user);
         return $user;
     }
 

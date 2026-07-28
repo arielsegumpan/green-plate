@@ -19,6 +19,7 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsIconAlias;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -42,7 +43,7 @@ class OrganizationPanelProvider extends PanelProvider
             ->sidebarWidth('15rem')
             ->spa(hasPrefetching: true)
             ->brandLogo(asset('imgs/gp_logo.png', true))
-            ->brandLogoHeight('2.5rem')
+            ->brandLogoHeight('3rem')
             ->favicon(asset('imgs/gp_logo.png'))
             ->topBar(false)
             ->sidebarCollapsibleOnDesktop()
@@ -55,7 +56,6 @@ class OrganizationPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Organization/Widgets'), for: 'App\Filament\Organization\Widgets')
             ->widgets([
                 AccountWidget::class,
-                FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -71,11 +71,14 @@ class OrganizationPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ])
+            ], isPersistent: true)
+            ->authGuard('web')
             ->plugins([
-                PhosphorIcons::make()->light(),
+                PhosphorIcons::make()
+                ->light()
+                ->overrideAlias(PanelsIconAlias::PAGES_DASHBOARD_NAVIGATION_ITEM, Phosphor::Speedometer),
             ])
-            ->tenant(Organization::class, ownershipRelationship: 'users', slugAttribute: 'org_slug') // tanan nga tenant
+            ->tenant(Organization::class, ownershipRelationship: 'organization', slugAttribute: 'org_slug') // tanan nga tenant
             ->tenantMiddleware([
                 ApplyOrganizationsScope::class, // dugang global scope sa tanan nga tenant
                 ApplyFilamentTenantThemeMiddleware::class // dugang theme sa tanan nga tenant

@@ -66,8 +66,9 @@ class AuthPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
                 PanelRoleMiddleware::class
-            ])
-             ->plugins([
+            ], isPersistent: true)
+            ->authGuard('web')
+            ->plugins([
                 AuthDesignerPlugin::make()
                 ->defaults(fn ($config) => $config
                     ->media(asset('imgs/hero_img2.jpg'))

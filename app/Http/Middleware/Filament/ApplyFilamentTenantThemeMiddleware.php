@@ -16,14 +16,14 @@ class ApplyFilamentTenantThemeMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $tenant = filament()->getTenant();
-         
-        if (!$tenant) {
+        $organization = filament()->getTenant();
+
+        if (!$organization) {
             return $next($request);
         }
 
-        Filament::getCurrentPanel()->brandLogo($tenant->getBrandLogo());
-        Filament::getCurrentPanel()->brandLogoHeight('3.5rem');
+        Filament::getCurrentPanel()->brandLogo($organization->getBrandLogo());
+        Filament::getCurrentPanel()->brandLogoHeight('3rem');
 
         return $next($request);
     }

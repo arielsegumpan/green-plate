@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Category;
 use Closure;
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,7 +17,7 @@ class ApplyOrganizationsScope
      * @var array<class-string>
      */
     protected array $tenantScopedModels = [
-
+        Category::class,
     ];
 
     /**

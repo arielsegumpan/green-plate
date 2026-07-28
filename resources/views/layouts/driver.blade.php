@@ -22,15 +22,30 @@
 
         @livewireStyles
         @livewireMapStyles
+{{--
+        <link rel="stylesheet" href="../../../assets/vendor/apexcharts/dist/apexcharts.css">
+        <style>
+        .apexcharts-tooltip.apexcharts-theme-light {
+            background-color: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+        .apexcharts-xaxistooltip {
+            background: var(--color-primary-600) !important;
+            border-color: var(--color-primary-600) !important;
+        }
+        .apexcharts-xaxistooltip:after,
+        .apexcharts-xaxistooltip:before {
+            border-bottom-color: var(--color-primary-600) !important;
+        }
+        </style> --}}
     </head>
     <body class="bg-[#f5f0ed] dark:bg-neutral-900 antialiased">
         @include('layouts.partials.driver.navigation')
-
         {{ $slot }}
-
         @livewireScripts
-        @livewireMapScripts
 
+        @livewireMapScripts
         <script>
             document.addEventListener("livewire:navigated", () => {
                 window.HSStaticMethods.autoInit();
@@ -112,7 +127,7 @@
             }
           });
         </script>
-        
+
         <script>
           window.addEventListener("load", () => {
             (function () {

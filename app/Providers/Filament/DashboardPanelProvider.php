@@ -75,6 +75,7 @@ class DashboardPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ], isPersistent: true)
+            ->authGuard('web');
     }
 }

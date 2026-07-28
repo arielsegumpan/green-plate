@@ -1,20 +1,15 @@
 <?php
 
-namespace App\Filament\Dashboard\Resources\Categories\Tables;
+namespace App\Filament\Dashboard\Resources\OrganizationMembers\Tables;
 
-use App\Filament\Dashboard\Resources\Categories\CategoryResource;
-use Filafly\Icons\Phosphor\Enums\Phosphor;
-use Filament\Actions\Action;
-use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class CategoriesTable
+class OrganizationMembersTable
 {
     public static function configure(Table $table): Table
     {
@@ -22,7 +17,9 @@ class CategoriesTable
             ->columns([
                 TextColumn::make('organization.id')
                     ->searchable(),
-                TextColumn::make('cat_name')
+                TextColumn::make('user.name')
+                    ->searchable(),
+                TextColumn::make('position')
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -37,28 +34,13 @@ class CategoriesTable
                 //
             ])
             ->recordActions([
-                ActionGroup::make([
-                    ViewAction::make(),
-                    EditAction::make(),
-                    DeleteAction::make(),
-                ])
-                ->icon(Phosphor::DotsThreeCircleVertical)
+                ViewAction::make(),
+                EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ])
-            ->defaultSort('created_at', direction: 'desc')
-            ->deferLoading()
-            ->emptyStateActions([
-                Action::make('create')
-                    ->label('New Plan')
-                    ->url(CategoryResource::getUrl('create'))
-                    ->icon(Phosphor::PlusCircle)
-                    ->button(),
-            ])
-            ->emptyStateIcon(Phosphor::Stack)
-            ->emptyStateHeading('No categories are created');
+            ]);
     }
 }

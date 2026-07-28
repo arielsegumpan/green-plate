@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Filament\Dashboard\Resources\Categories\Pages;
+namespace App\Filament\Organization\Resources\OrganizationMembers\Pages;
 
-use App\Filament\Dashboard\Resources\Categories\CategoryResource;
-use App\Models\Category;
+use App\Filament\Organization\Resources\OrganizationMembers\OrganizationMemberResource;
+use App\Models\OrganizationMember;
 use Filafly\Icons\Phosphor\Enums\Phosphor;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Contracts\Support\Htmlable;
 
-class ViewCategory extends ViewRecord
+class ViewOrganizationMember extends ViewRecord
 {
-    protected static string $resource = CategoryResource::class;
+    protected static string $resource = OrganizationMemberResource::class;
 
     protected function getHeaderActions(): array
     {
@@ -22,8 +22,8 @@ class ViewCategory extends ViewRecord
 
     public function getTitle(): string | Htmlable
     {
-        /** @var Category */
+        /** @var OrganizationMember */
         $record = $this->getRecord();
-        return $record->cat_name;
+        return 'View ' . $record->user->name;
     }
 }

@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Donation;
 use App\Models\Location;
 use App\Models\RecipientRequest;
+use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['location_id', 'org_name', 'org_slug', 'org_email', 'org_contact_number', 'org_logo', 'status', 'type', 'org_desc', 'other_details'])]
-class Organization extends Model
+class Organization extends Model implements HasName
 {
     use SoftDeletes;
 
@@ -28,6 +29,20 @@ class Organization extends Model
             'other_details' => 'array',
         ];
     }
+
+    public function getFilamentName(): string
+    {
+        return $this->org_name;
+    }
+
+    public function getBrandLogo()
+    {
+        if ($this->org_logo) {
+            return asset('storage/' . $this->org_logo);
+        }
+        return asset('imgs/gp_logo.png');
+    }
+
 
     public function users() : BelongsToMany
     {
@@ -104,8 +119,8 @@ class Organization extends Model
         return $this->hasMany(DeliveryStatusLog::class, 'tenant_id', 'id');
     }
 
-    public function organizationMembers() : HasMany
+    public function organizationMembers(): HasMany
     {
-        return $this->hasMany(OrganizationMember::class, 'tenant_id', 'id');
+        return $this->hasMany(OrganizationMember::class, 'organization_id', 'id');
     }
 }

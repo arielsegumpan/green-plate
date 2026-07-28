@@ -3,6 +3,7 @@
 namespace App\Filament\Dashboard\Resources\Categories\Pages;
 
 use App\Filament\Dashboard\Resources\Categories\CategoryResource;
+use Filafly\Icons\Phosphor\Enums\Phosphor;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
@@ -13,7 +14,7 @@ class ListCategories extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()->icon(Phosphor::Plus)->label('New Category'),
         ];
     }
 }

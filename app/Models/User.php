@@ -5,17 +5,16 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Delivery;
 use App\Models\Organization;
-use App\Models\Tenant;
 use App\Models\Vehicle;
-use Database\Factories\UserFactory;
 use Filament\Facades\Filament;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -26,7 +25,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 #[Fillable(['name', 'avatar', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser, HasTenants
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, SoftDeletes, HasRoles;
@@ -54,13 +53,18 @@ class User extends Authenticatable
         return $this->hasOne(Vehicle::class);
     }
 
+    public function organizationMember(): HasOne
+    {
+        return $this->hasOne(OrganizationMember::class, 'user_id', 'id');
+    }
+
 
     public function deliveries(): HasMany
     {
         return $this->hasMany(Delivery::class, 'driver_id');
     }
 
-    public function getTenant(Panel $panel): Collection
+    public function getTenants(Panel $panel): Collection
     {
         return $this->organizations;
     }

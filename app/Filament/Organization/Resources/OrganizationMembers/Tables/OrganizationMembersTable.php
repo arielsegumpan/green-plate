@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Dashboard\Resources\Categories\Tables;
+namespace App\Filament\Organization\Resources\OrganizationMembers\Tables;
 
-use App\Filament\Dashboard\Resources\Categories\CategoryResource;
+use App\Filament\Organization\Resources\OrganizationMembers\OrganizationMemberResource;
 use Filafly\Icons\Phosphor\Enums\Phosphor;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
@@ -14,22 +14,34 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class CategoriesTable
+class OrganizationMembersTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('organization.id')
+
+                TextColumn::make('user.name')
+                    ->label('Name')
+                    ->sortable()
                     ->searchable(),
-                TextColumn::make('cat_name')
+
+                TextColumn::make('user.email')
+                    ->label('Email')
+                    ->sortable()
                     ->searchable(),
+
+                TextColumn::make('position')
+                    ->sortable()
+                    ->searchable(),
+
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime('d M Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->dateTime('d M Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -37,8 +49,8 @@ class CategoriesTable
                 //
             ])
             ->recordActions([
+                ViewAction::make(),
                 ActionGroup::make([
-                    ViewAction::make(),
                     EditAction::make(),
                     DeleteAction::make(),
                 ])
@@ -53,12 +65,13 @@ class CategoriesTable
             ->deferLoading()
             ->emptyStateActions([
                 Action::make('create')
-                    ->label('New Plan')
-                    ->url(CategoryResource::getUrl('create'))
-                    ->icon(Phosphor::PlusCircle)
+                    ->label('New Member')
+                    ->url(
+                        OrganizationMemberResource::getUrl('create'))
+                    ->icon(Phosphor::Plus)
                     ->button(),
             ])
-            ->emptyStateIcon(Phosphor::Stack)
-            ->emptyStateHeading('No categories are created');
+            ->emptyStateIcon(Phosphor::UsersFour)
+            ->emptyStateHeading('No organization members are created');
     }
 }

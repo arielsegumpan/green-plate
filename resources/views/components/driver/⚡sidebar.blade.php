@@ -21,7 +21,7 @@ new class extends Component
         <div class="px-6 pt-4 flex items-center">
             <!-- Logo -->
             <a class="flex-none rounded-xl text-xl inline-block font-semibold focus:outline-hidden focus:opacity-80"
-                href="#" aria-label="{{ config('app.name') }}">
+                href="{{ route('driver.page') }}" aria-label="{{ config('app.name') }}">
                <img
                     src="{{ asset('imgs/gp_logo.png') }}"
                     alt="{{ config('app.name') }}"

@@ -3,6 +3,7 @@
 namespace App\Filament\Dashboard\Resources\Categories\Pages;
 
 use App\Filament\Dashboard\Resources\Categories\CategoryResource;
+use Filafly\Icons\Phosphor\Enums\Phosphor;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;
@@ -14,8 +15,13 @@ class EditCategory extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            ViewAction::make(),
-            DeleteAction::make(),
+            ViewAction::make()->icon(Phosphor::Eye),
+            DeleteAction::make()->icon(Phosphor::Trash),
         ];
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }

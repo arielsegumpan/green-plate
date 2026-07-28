@@ -2,11 +2,15 @@
 
 namespace App\Filament\Pages;
 
+use App\Enums\OrganizationStatusEnums;
 use App\Enums\OrganizationTypeEnums;
 use App\Models\Organization;
 use Fahiem\FilamentPinpoint\Pinpoint;
 use Filafly\Icons\Phosphor\Enums\Phosphor;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\RichEditor\ToolbarButtonGroup;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
@@ -17,7 +21,6 @@ use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Components\Wizard\Step;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Width;
-use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
@@ -37,7 +40,6 @@ class RegisterOrganization extends RegisterTenant
 
                 Wizard::make([
                     Step::make('Organization Information')
-                        ->description('Enter your organization information below.')
                         ->icon(Phosphor::Storefront)
                         ->completedIcon(Phosphor::CheckCircle)
                         ->schema([
@@ -57,10 +59,10 @@ class RegisterOrganization extends RegisterTenant
                                     ])
                                     ->maxSize(512)
                                     ->validationMessages([
-                                            'required' => 'Please upload an organization logo.',
-                                            'image' => 'The uploaded file must be an image.',
-                                            'maxSize' => 'The uploaded file must be less than 512kb.',
-                                        ]),
+                                        'required' => 'Please upload an organization logo.',
+                                        'image' => 'The uploaded file must be an image.',
+                                        'max' => 'The uploaded file must be less than 512kb.',
+                                    ]),
 
                                 Group::make([
                                     TextInput::make('org_name')
@@ -68,7 +70,6 @@ class RegisterOrganization extends RegisterTenant
                                         ->required()
                                         ->trim()
                                         ->maxLength(255)
-                                        ->scopedUnique()
                                         ->live(onBlur: true)
                                         ->unique(table: 'organizations', column: 'org_name')
                                         ->afterStateUpdated(fn(Set $set, ?string $state) => $set('org_slug', Str::slug($state)))
@@ -83,7 +84,10 @@ class RegisterOrganization extends RegisterTenant
                                         ->maxLength(255)
                                         ->disabled()
                                         ->dehydrated()
-                                        ->scopedUnique(),
+                                        ->validationMessages([
+                                            'required' => 'Please generate slug.',
+                                            'unique' => 'This slug is already taken.',
+                                        ]),
 
                                     Group::make([
                                         TextInput::make('org_email')
@@ -91,14 +95,23 @@ class RegisterOrganization extends RegisterTenant
                                             ->trim()
                                             ->required()
                                             ->suffixIcon(Phosphor::Envelope)
-                                            ->maxLength(255),
+                                            ->maxLength(255)
+                                            ->validationMessages([
+                                                'required' => 'Please enter an email.',
+                                                'unique' => 'This email is already taken.',
+                                                'email' => 'Please enter a valid email.',
+                                            ]),
 
                                         Select::make('type')
                                             ->required()
                                             ->native(false)
                                             ->options(OrganizationTypeEnums::class)
                                             ->default(OrganizationTypeEnums::RECIPIENT)
+                                            ->enum(OrganizationTypeEnums::class)
                                             ->dehydrated()
+                                            ->validationMessages([
+                                                'required' => 'Please select an organization type.',
+                                            ])
                                     ])
                                         ->columnSpanFull()
                                         ->columns([
@@ -109,16 +122,20 @@ class RegisterOrganization extends RegisterTenant
                                         ]),
 
                                     TextInput::make('org_contact_number')
+                                        ->label('Contact Number')
                                         ->tel()
                                         ->trim()
                                         ->required()
                                         ->suffixIcon(Phosphor::Phone)
-                                        ->maxLength(255)
-                                        ->columnSpanFull(),
-
-
-
-
+                                        ->maxLength(10) // Total characters allowed in the input box (e.g., 9493934319)
+                                        ->columnSpanFull()
+                                        ->telRegex('/^9\d{9}$/') // Ensures it starts with 9 and is followed by exactly 9 digits
+                                        ->prefix('+639')
+                                        ->validationMessages([
+                                            'required' => 'Please enter a contact number.',
+                                            'regex' => 'The contact number must be a valid 10-digit number starting with 9.',
+                                            'max' => 'The contact number must be 10 digits.',
+                                        ]),
                                 ])
                                     ->columns(2)
                                     ->columnSpan([
@@ -134,32 +151,78 @@ class RegisterOrganization extends RegisterTenant
                                     'lg' => 5,
                                 ]),
                         ]),
-                    Step::make('Select Location')
-                        ->description('Select your shop location.')
-                        ->icon(Phosphor::MapPin)
+                    Step::make('Orginization Description')
+                        ->icon(Phosphor::ArticleNyTimes)
                         ->completedIcon(Phosphor::CheckCircle)
                         ->schema([
+                            RichEditor::make('org_desc')
+                                ->label('Description')
+                                ->maxLength(2000)
+                                ->floatingToolbars([
+                                    'paragraph' => [
+                                        'bold',
+                                        'italic',
+                                        'underline',
+                                        'strike',
+                                        'subscript',
+                                        'superscript',
+                                    ],
+                                    'heading' => [
+                                        'h1',
+                                        'h2',
+                                        'h3',
+                                    ],
+                                    'table' => [
+                                        'tableAddColumnBefore',
+                                        'tableAddColumnAfter',
+                                        'tableDeleteColumn',
+                                        'tableAddRowBefore',
+                                        'tableAddRowAfter',
+                                        'tableDeleteRow',
+                                        'tableMergeCells',
+                                        'tableSplitCell',
+                                        'tableToggleHeaderRow',
+                                        'tableToggleHeaderCell',
+                                        'tableDelete',
+                                    ],
+                                ])
+                                ->toolbarButtons([
+                                    ['bold', 'italic', 'underline', 'strike', 'link'],
+                                    [ToolbarButtonGroup::make('Paragraph', ['paragraph', 'h1', 'h2', 'h3'])->textualButtons()],
+                                    [ToolbarButtonGroup::make('Alignment', ['alignStart', 'alignCenter', 'alignEnd', 'alignJustify'])],
+                                    ['blockquote', 'codeBlock', 'bulletList', 'orderedList'],
+                                    ['undo', 'redo'],
+                                ])
+                                ->validationMessages([
+                                    'max' => 'The description must not exceed :max characters.',
+                                ])
+
+                        ]),
+                    Step::make('Location & Other Details')
+                        ->icon(Phosphor::MapPin)
+                        ->completedIcon(Phosphor::Info)
+                        ->schema([
                             Group::make([
-                                Pinpoint::make('shop_address')
+                                Pinpoint::make('other_details')
                                     ->label('Location')
                                     ->provider('leaflet')
-                                    ->defaultLocation(10.90154, 123.0705) // Jakarta
+                                    ->defaultLocation(10.90154, 123.0705) // Victorias Default
                                     ->defaultZoom(15)
                                     ->height(400)
-                                    ->latField('shop_latitude')
-                                    ->lngField('shop_longitude')
-                                    ->addressField('shop_address')
+                                    ->latField('other_details.lat')
+                                    ->lngField('other_details.long')
+                                    ->addressField('other_details.address')
                                     ->draggable()
                                     ->searchable()
                                     ->columnSpanFull()
                                     ->height(300)
                                     ->dehydrated(),
 
-                                TextInput::make('shop_latitude')
+                                TextInput::make('other_details.lat')
                                     ->label('Latitude')
                                     ->readOnly(),
 
-                                TextInput::make('shop_longitude')
+                                TextInput::make('other_details.long')
                                     ->label('Longitude')
                                     ->readOnly(),
                             ])
@@ -190,11 +253,10 @@ class RegisterOrganization extends RegisterTenant
         return [];
     }
 
-
     protected function handleRegistration(array $data): Organization
     {
-
-        $data['status'] = 'active';
+        $data['org_contact_number'] = Str::trim('0' . $data['org_contact_number']); // Ensure it starts with 0
+        $data['status'] = OrganizationStatusEnums::ACTIVE->value; // Ensure it starts with 0
 
         $org = Organization::create($data);
         $org->users()->attach(Auth::user());
