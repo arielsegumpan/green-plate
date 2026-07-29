@@ -37,7 +37,6 @@ class RegisterOrganization extends RegisterTenant
     {
         return $schema
             ->components([
-
                 Wizard::make([
                     Step::make('Organization Information')
                         ->icon(Phosphor::Storefront)
@@ -100,18 +99,8 @@ class RegisterOrganization extends RegisterTenant
                                                 'required' => 'Please enter an email.',
                                                 'unique' => 'This email is already taken.',
                                                 'email' => 'Please enter a valid email.',
-                                            ]),
-
-                                        Select::make('type')
-                                            ->required()
-                                            ->native(false)
-                                            ->options(OrganizationTypeEnums::class)
-                                            ->default(OrganizationTypeEnums::RECIPIENT)
-                                            ->enum(OrganizationTypeEnums::class)
-                                            ->dehydrated()
-                                            ->validationMessages([
-                                                'required' => 'Please select an organization type.',
                                             ])
+                                            ->columnspanFull(),
                                     ])
                                         ->columnSpanFull()
                                         ->columns([

@@ -7,6 +7,8 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 class UserForm
 {
@@ -45,7 +47,10 @@ class UserForm
                 ->schema([
                     CheckboxList::make('roles')
                     ->relationship('roles', 'name')
-                    ->searchable(),
+                    ->searchable()
+                    ->getOptionLabelFromRecordUsing(
+                        fn (Role $record) => Str::of($record->name)->replace('_', ' ')->title()
+                    ),
                 ])
                 ->columnSpanFull()
             ]);

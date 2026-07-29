@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('donations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
-            $table->foreignId('pickup_location_id')->constrained('locations')->cascadeOnDelete();
             $table->string('reference_no')->unique();
             $table->timestamp('available_from');
             $table->timestamp('expires_at');

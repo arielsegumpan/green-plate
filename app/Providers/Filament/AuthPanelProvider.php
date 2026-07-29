@@ -6,6 +6,7 @@ use App\Filament\Pages\Registration;
 use App\Http\Middleware\PanelRoleMiddleware;
 use Caresome\FilamentAuthDesigner\AuthDesignerPlugin;
 use Caresome\FilamentAuthDesigner\Enums\MediaPosition;
+use Caresome\FilamentAuthDesigner\View\AuthDesignerRenderHook;
 use Filafly\Icons\Phosphor\PhosphorIcons;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -73,24 +74,26 @@ class AuthPanelProvider extends PanelProvider
                 ->defaults(fn ($config) => $config
                     ->media(asset('imgs/hero_img2.jpg'))
                     ->mediaPosition(MediaPosition::Right)
-                    ->mediaSize('50%')
+                    ->mediaSize('40%')
                 )
                 ->login(fn ($config) => $config
                     ->media(asset('imgs/hero_img2.jpg'))
                     ->mediaPosition(MediaPosition::Right)
-                    ->mediaSize('50%')
+                    ->mediaSize('40%')
                     ->themeToggle(bottom: '2rem', left: '2rem')
+                    ->renderHook(AuthDesignerRenderHook::CardBefore, fn () => view('auth.media-overlay'))
                 )
                 ->registration(fn ($config) => $config
                     ->media(asset('imgs/hero_img2.jpg'))
                     ->mediaPosition(MediaPosition::Right)
-                    ->mediaSize('50%')
+                    ->mediaSize('40%')
                     ->themeToggle(bottom: '2rem', left: '2rem')
                     ->usingPage(Registration::class))
 
+
                 ->passwordReset(fn ($config) => $config
                     ->mediaPosition(MediaPosition::Right)
-                    ->mediaSize('50%')
+                    ->mediaSize('40%')
                 )
                 ->themeToggle(),
 

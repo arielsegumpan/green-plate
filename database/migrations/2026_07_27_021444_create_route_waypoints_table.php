@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
             $table->foreignId('route_id')->constrained('routes')->cascadeOnDelete();
-            $table->foreignId('location_id')->constrained('locations')->cascadeOnDelete();
+            // $table->foreignId('location_id')->constrained('locations')->cascadeOnDelete();
             $table->integer('sequence');
             $table->enum('type', [
                 'pickup',

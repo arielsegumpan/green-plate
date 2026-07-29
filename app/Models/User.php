@@ -80,7 +80,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants
 
         return match ($panelId) {
             'dashboard' => $this->hasRole('super_admin'),
-            'organization' => $this->hasAnyRole(['organization', 'super_admin']),
+            'organization' => $this->hasAnyRole(['donor', 'recipient', 'super_admin', 'both']),
             // 'driver' => $this->hasAnyRole(['driver', 'super_admin']),
             'auth' => true,
             default => false,
@@ -92,10 +92,12 @@ class User extends Authenticatable implements FilamentUser, HasTenants
         $role = $this->getRoleNames()->first();
 
         return match ($role) {
-            'super_admin'   => Filament::getPanel('dashboard')->getUrl(),
-            'organization'    => $this->getClientPanelUrl(),
+            'super_admin'    => Filament::getPanel('dashboard')->getUrl(),
+            'donor'          => $this->getClientPanelUrl(),
+            'recipient'      => $this->getClientPanelUrl(),
+            'both'           => $this->getClientPanelUrl(),
             'driver'         => route('driver.page'),
-            default         => route('filament.auth.auth.login'),
+            default          => route('filament.auth.auth.login'),
         };
     }
 
@@ -104,15 +106,11 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     {
         $orgs = $this->organizations;
 
-        // if($tenants === null){
-        //     return route('filament.myshop.tenant.registration');
-        // }
-
         if ($orgs->isEmpty()) {
             return route('filament.auth.auth.login');
         }
 
-        // If only one netShop, redirect directly
+        // If only one org, redirect directly
         if ($orgs->count() === 1) {
             $panel = Filament::getPanel('organization');
             return $panel->getUrl($orgs->first());

@@ -16,7 +16,7 @@ class PanelRoleMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-         $user = $request->user();
+        $user = $request->user();
         $currentPanel = Filament::getCurrentPanel();
         $currentPanelId = $currentPanel?->getId();
 
@@ -37,7 +37,7 @@ class PanelRoleMiddleware
         // Panel → allowed roles mapping
         $panelRoles = [
             'dashboard' => ['super_admin'],
-            'organization' => ['organization', 'super_admin'],
+            'organization' => ['donor', 'recipient', 'both', 'super_admin'],
             'driver' => ['driver', 'super_admin'],
             'auth' => [],
         ];
@@ -63,11 +63,11 @@ class PanelRoleMiddleware
             return redirect()->to(Filament::getPanel('dashboard')->getUrl());
         }
         // Tenant -> organization
-        if ($user->hasRole('organization')) {
-            $defaultNetShop = $user->organizations()->first();
-            if ($defaultNetShop) {
+        if ($user->hasAnyRole(['donor', 'recipient', 'both'])) {
+            $defOrganization = $user->organizations()->first();
+            if ($defOrganization) {
                 return redirect()->to(
-                    Filament::getPanel('organization')->getUrl($defaultNetShop)
+                    Filament::getPanel('organization')->getUrl($defOrganization)
                 );
             }
 

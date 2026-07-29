@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\OrganizationTypeEnums;
 use App\Models\Category;
 use App\Models\Donation;
 use App\Models\Location;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['location_id', 'org_name', 'org_slug', 'org_email', 'org_contact_number', 'org_logo', 'status', 'type', 'org_desc', 'other_details'])]
+#[Fillable(['location_id', 'org_name', 'org_slug', 'org_email', 'org_contact_number', 'org_logo', 'status', 'org_desc', 'other_details'])]
 class Organization extends Model implements HasName
 {
     use SoftDeletes;
@@ -27,6 +28,7 @@ class Organization extends Model implements HasName
     {
         return [
             'other_details' => 'array',
+            'type' => OrganizationTypeEnums::class
         ];
     }
 
@@ -122,5 +124,17 @@ class Organization extends Model implements HasName
     public function organizationMembers(): HasMany
     {
         return $this->hasMany(OrganizationMember::class, 'organization_id', 'id');
+    }
+
+    //Helpers
+
+     public function isDonor(): bool
+    {
+        return $this->type === OrganizationTypeEnums::DONOR;
+    }
+
+    public function isRecipient(): bool
+    {
+        return $this->type === OrganizationTypeEnums::RECIPIENT;
     }
 }

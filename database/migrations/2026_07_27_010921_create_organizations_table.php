@@ -23,11 +23,6 @@ return new class extends Migration
                 'inactive',
                 'suspended'
             ])->default('active');
-            $table->enum('type', [
-                'donor',
-                'recipient',
-                'both'
-            ]);
             $table->text('org_desc')->nullable();
             $table->json('other_details')->nullable();
             $table->timestamps();
