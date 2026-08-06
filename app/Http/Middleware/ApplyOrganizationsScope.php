@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Category;
+use App\Models\Donation;
 use App\Models\OrganizationMember;
 use Closure;
 use Filament\Facades\Filament;
@@ -20,6 +21,7 @@ class ApplyOrganizationsScope
     protected array $tenantScopedModels = [
         Category::class,
         OrganizationMember::class,
+        Donation::class,
     ];
 
     /**

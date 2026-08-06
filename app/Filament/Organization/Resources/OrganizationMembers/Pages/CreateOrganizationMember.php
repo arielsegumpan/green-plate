@@ -7,17 +7,20 @@ use App\Models\User;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 class CreateOrganizationMember extends CreateRecord
 {
     protected static string $resource = OrganizationMemberResource::class;
+
     protected ?User $newUser = null;
+
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');
     }
 
-     protected function mutateFormDataBeforeCreate(array $data): array
+    protected function mutateFormDataBeforeCreate(array $data): array
     {
         $userData = $data['user'];
 
@@ -29,6 +32,11 @@ class CreateOrganizationMember extends CreateRecord
 
         $data['user_id'] = $this->newUser->id;
 
+        $roleId = $this->data['role_id'] ?? null;
+        $data['position'] = $roleId
+            ? Str::of(Role::find($roleId)?->name)->title()
+            : null;
+
         unset($data['user']);
 
         return $data;
@@ -36,6 +44,11 @@ class CreateOrganizationMember extends CreateRecord
 
     protected function afterCreate(): void
     {
-        $this->newUser?->assignRole('driver');
+        $roleId = $this->data['role_id'] ?? null;
+        if ($roleId) {
+            $role = Role::find($roleId);
+            $this->record->user->syncRoles([$role]);
+        }
+        // $this->newUser?->assignRole('driver');
     }
 }

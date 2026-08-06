@@ -7,6 +7,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 class OrganizationMemberForm
 {
@@ -69,10 +71,21 @@ class OrganizationMemberForm
                                 'min' => 'The password must be at least 8 characters.',
                                 'max' => 'The password must not exceed 255 characters.',
                             ]),
-                        TextInput::make('position')
-                            ->default(null)
-                            ->minLength(3)
-                            ->maxLength(255)
+
+                        Select::make('role_id')
+                            ->label('Role')
+                            ->options(function () {
+                                return Role::query()
+                                    ->whereNotIn('name', ['super_admin', 'organization'])
+                                    ->pluck('name', 'id')
+                                     ->map(fn ($name) => Str::of($name)->title());
+                            })
+                            ->searchable()
+                            ->required()
+                            ->preload()
+                            ->optionsLimit(5)
+                            ->native(false)
+                            ->dehydrated(false)
                             ->columnSpanFull(),
 
                     ])
@@ -81,8 +94,8 @@ class OrganizationMemberForm
                         'default' => 1,
                         'sm' => 1,
                         'md' => 2,
-                        'lg' => 2
-                    ])
+                        'lg' => 2,
+                    ]),
             ]);
     }
 }

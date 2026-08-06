@@ -20,7 +20,7 @@ return [
     */
 
     'shield_resource' => [
-        'slug' => 'shield/roles',
+        'slug' => 'users/mgmt/roles',
         'show_model_path' => true,
         'cluster' => null,
         'tabs' => [

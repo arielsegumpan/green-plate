@@ -4,6 +4,8 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\EditOrganizationProfile;
 use App\Filament\Pages\RegisterOrganization;
+use App\Filament\Widgets\DateTimeWidget;
+use App\Filament\Widgets\GreetingWidget;
 use App\Http\Middleware\ApplyOrganizationsScope;
 use App\Http\Middleware\Filament\ApplyFilamentTenantThemeMiddleware;
 use App\Http\Middleware\PanelRoleMiddleware;
@@ -20,8 +22,6 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\View\PanelsIconAlias;
-use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -39,7 +39,7 @@ class OrganizationPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Green,
             ])
-            ->font('Montserrat')
+            ->font('Instrument Sans')
             ->sidebarWidth('15rem')
             ->spa(hasPrefetching: true)
             ->brandLogo(asset('imgs/gp_logo.png', true))
@@ -55,10 +55,11 @@ class OrganizationPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Organization/Widgets'), for: 'App\Filament\Organization\Widgets')
             ->widgets([
-                AccountWidget::class,
+                GreetingWidget::class,
+                DateTimeWidget::class,
             ])
             ->middleware([
-                EncryptCookies::class,
+                EncryptCookies::class,  
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
                 AuthenticateSession::class,
@@ -86,7 +87,7 @@ class OrganizationPanelProvider extends PanelProvider
             ->tenantRegistration(RegisterOrganization::class) // custom registration page para sa tanan nga tenant
             ->tenantProfile(EditOrganizationProfile::class) // custom profile page para sa tanan nga tenant
             ->tenantMenuItems([
-                'register' => fn (Action $action) => $action->label('Create New Organization')->icon(Phosphor::Plus)->color('primary'), // custom menu item para sa tanan nga tenant
+                'register' => fn (Action $action) => $action->label('New Organization')->icon(Phosphor::Plus)->color('primary'), // custom menu item para sa tanan nga tenant
             ]);
     }
 }

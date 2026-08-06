@@ -11,36 +11,36 @@ use Illuminate\Contracts\Support\Htmlable;
 
 enum OrganizationStatusEnums: string implements HasLabel, HasColor, HasIcon
 {
+    case PENDING = 'pending';
     case ACTIVE = 'active';
     case INACTIVE = 'inactive';
-    case SUSPENDED = 'suspended';
 
 
     public function getLabel(): string | Htmlable | null
     {
 
         return match ($this) {
+            self::PENDING => 'Pending',
             self::ACTIVE => 'Active',
             self::INACTIVE => 'Inactive',
-            self::SUSPENDED => 'Suspended',
         };
     }
 
     public function getColor(): string | array | null
     {
         return match ($this) {
+            self::PENDING => 'warning',
             self::ACTIVE => 'success',
             self::INACTIVE => 'danger',
-            self::SUSPENDED => 'warning',
         };
     }
 
     public function getIcon(): string | BackedEnum | Htmlable | null
     {
         return match ($this) {
+            self::PENDING => Phosphor::ClockCounterClockwise,
             self::ACTIVE => Phosphor::CheckCircle,
-            self::INACTIVE => Phosphor::XCircle,
-            self::SUSPENDED => Phosphor::WarningCircle,
+            self::INACTIVE => Phosphor::WarningCircle,
         };
     }
 }

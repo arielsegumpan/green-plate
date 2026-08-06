@@ -20,6 +20,11 @@ class PanelRoleMiddleware
         $currentPanel = Filament::getCurrentPanel();
         $currentPanelId = $currentPanel?->getId();
 
+        // Reset team context up front — only tenant-aware panels should set it
+        if (!$currentPanel?->hasTenancy()) {
+            app(\Spatie\Permission\PermissionRegistrar::class)->setPermissionsTeamId(null);
+        }
+
         // If no user, redirect to login
         if (!$user) {
             return redirect()->route('filament.auth.auth.login');

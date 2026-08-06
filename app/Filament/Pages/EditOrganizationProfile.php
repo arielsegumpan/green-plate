@@ -2,24 +2,22 @@
 
 namespace App\Filament\Pages;
 
-use App\Enums\OrganizationTypeEnums;
 use Fahiem\FilamentPinpoint\Pinpoint;
 use Filafly\Icons\Phosphor\Enums\Phosphor;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\RichEditor\ToolbarButtonGroup;
-use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\Tenancy\EditTenantProfile;
 use Filament\Schemas\Components\Group;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Components\Wizard\Step;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
@@ -55,6 +53,7 @@ class EditOrganizationProfile extends EditTenantProfile
                                         'lg' => 2,
                                     ])
                                     ->maxSize(512)
+                                    ->optimize('webp')
                                     ->validationMessages([
                                         'required' => 'Please upload an organization logo.',
                                         'image' => 'The uploaded file must be an image.',
@@ -76,6 +75,7 @@ class EditOrganizationProfile extends EditTenantProfile
                                         ]),
 
                                     TextInput::make('org_slug')
+                                        ->label('Slug')
                                         ->required()
                                         ->trim()
                                         ->maxLength(255)
@@ -88,6 +88,7 @@ class EditOrganizationProfile extends EditTenantProfile
 
                                     Group::make([
                                         TextInput::make('org_email')
+                                            ->label('Email')
                                             ->email()
                                             ->trim()
                                             ->required()
@@ -98,30 +99,52 @@ class EditOrganizationProfile extends EditTenantProfile
                                                 'unique' => 'This email is already taken.',
                                                 'email' => 'Please enter a valid email.',
                                             ]),
+
+                                        TextInput::make('org_contact_number')
+                                            ->label('Contact Number')
+                                            ->tel()
+                                            ->trim()
+                                            ->required()
+                                            ->suffixIcon(Phosphor::Phone)
+                                            ->maxLength(10) // Total characters allowed in the input box (e.g., 9493934319)
+                                            ->telRegex('/^9\d{9}$/') // Ensures it starts with 9 and is followed by exactly 9 digits
+                                            ->prefix('+639')
+                                            ->validationMessages([
+                                                'required' => 'Please enter a contact number.',
+                                                'regex' => 'The contact number must be a valid 10-digit number starting with 9.',
+                                                'max' => 'The contact number must be 10 digits.',
+                                            ]),
+
                                     ])
                                         ->columnSpanFull()
                                         ->columns([
                                             'default' => 1,
                                             'sm' => 1,
                                             'md' => 2,
-                                            'lg' => 2
+                                            'lg' => 2,
                                         ]),
 
-                                    TextInput::make('org_contact_number')
-                                        ->label('Contact Number')
-                                        ->tel()
-                                        ->trim()
+                                    TagsInput::make('org_cat')
+                                        ->label('Categories')
                                         ->required()
-                                        ->suffixIcon(Phosphor::Phone)
-                                        ->maxLength(10) // Total characters allowed in the input box (e.g., 9493934319)
-                                        ->columnSpanFull()
-                                        ->telRegex('/^9\d{9}$/') // Ensures it starts with 9 and is followed by exactly 9 digits
-                                        ->prefix('+639')
-                                        ->validationMessages([
-                                            'required' => 'Please enter a contact number.',
-                                            'regex' => 'The contact number must be a valid 10-digit number starting with 9.',
-                                            'max' => 'The contact number must be 10 digits.',
-                                        ]),
+                                        ->reorderable()
+                                        ->trim()
+                                        ->splitKeys(['Tab', ' '])
+                                        ->nestedRecursiveRules([
+                                            'min:3',
+                                            'max:150',
+                                        ])
+                                        ->separator(',')
+                                        ->suggestions([
+                                            'restaurant',
+                                            'hotel',
+                                            'supermarket',
+                                            'bakery',
+                                            'NGO',
+                                            'LGU',
+                                            'community pantry'
+                                        ])
+                                        ->columnSpanFull(),
                                 ])
                                     ->columns(2)
                                     ->columnSpan([
@@ -240,6 +263,8 @@ class EditOrganizationProfile extends EditTenantProfile
         $oldSlug = $record->org_slug;
         $newSlug = $data['org_slug'];
         $data['org_contact_number'] = Str::trim('0' . $data['org_contact_number']);
+         $data['org_type'] = Str::of(Auth::user()->getRoleNames()->first())->title()->trim();
+         
         $record->update($data);
 
         // If slug changed, redirect to the new tenant URL

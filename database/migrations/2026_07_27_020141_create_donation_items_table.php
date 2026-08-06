@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('donation_id')->constrained('donations')->cascadeOnDelete();
             $table->foreignId('food_category_id')->constrained('food_categories')->cascadeOnDelete();
             $table->string('food_name');
+            $table->json('food_imgs')->nullable();
             $table->text('food_desc')->nullable();
             $table->decimal('quantity', 10, 2);
             $table->enum('unit', [
@@ -25,6 +26,9 @@ return new class extends Migration
                 'box',
                 'tray'
             ]);
+            $table->float('temperature_required')->nullable();
+            $table->string('estimated_meals')->nullable();
+            $table->timestamp('prepared_at');
             $table->timestamp('expires_at');
             $table->timestamps();
             $table->softDeletes();

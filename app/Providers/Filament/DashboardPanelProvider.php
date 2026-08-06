@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Widgets\GreetingWidget;
 use App\Http\Middleware\PanelRoleMiddleware;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filafly\Icons\Phosphor\Enums\Phosphor;
@@ -48,6 +49,7 @@ class DashboardPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Dashboard/Widgets'), for: 'App\Filament\Dashboard\Widgets')
             ->widgets([
+                GreetingWidget::class,
                 AccountWidget::class,
             ])
             ->middleware([
@@ -63,12 +65,14 @@ class DashboardPanelProvider extends PanelProvider
                 PanelRoleMiddleware::class
             ])
             ->plugins([
+                
                 FilamentShieldPlugin::make()
                     ->navigationLabel('Roles')
                     ->activeNavigationIcon('heroicon-s-shield-check')
                     ->navigationGroup('User Mgmt')
                     ->navigationSort(20)
                     ->navigationBadgeColor('success'),
+
                 PhosphorIcons::make()
                     ->light()
                     ->overrideAlias(PanelsIconAlias::PAGES_DASHBOARD_NAVIGATION_ITEM, Phosphor::Speedometer),

@@ -5,13 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['organization_id', 'donation_id', 'food_category_id', 'food_name', 'food_desc', 'quantity', 'unit', 'expires_at'])]
+#[Fillable(['organization_id', 'donation_id', 'food_category_id', 'food_name', 'food_imgs', 'food_desc', 'quantity', 'unit', 'temperature_required', 'estimated_meals', 'prepared_at', 'expires_at'])]
 class DonationItem extends Model
 {
     use SoftDeletes;
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'food_imgs' => 'array',
+        ];
+    }
 
     public function organization() : BelongsTo
     {
@@ -23,13 +34,9 @@ class DonationItem extends Model
         return $this->belongsTo(Donation::class, 'donation_id', 'id');
     }
 
+
     public function foodCategory() : BelongsTo
     {
         return $this->belongsTo(FoodCategory::class, 'food_category_id', 'id');
-    }
-
-    public function foodImages() : HasMany
-    {
-        return $this->hasMany(FoodImage::class, 'donation_item_id', 'id');
     }
 }

@@ -54,7 +54,7 @@ class OrganizationMembersTable
                     EditAction::make(),
                     DeleteAction::make(),
                 ])
-                ->icon(Phosphor::DotsThreeCircleVertical)
+                ->icon(Phosphor::DotsThreeOutlineVertical)
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

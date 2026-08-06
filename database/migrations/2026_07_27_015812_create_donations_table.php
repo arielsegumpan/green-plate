@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('donations', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
             $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
             $table->string('reference_no')->unique();
             $table->timestamp('available_from');
             $table->timestamp('expires_at');
+            $table->json('pickup_location')->nullable();
             $table->enum('status', [
                 'pending',
                 'matched',

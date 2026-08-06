@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['location_id', 'org_name', 'org_slug', 'org_email', 'org_contact_number', 'org_logo', 'status', 'org_desc', 'other_details'])]
+#[Fillable(['organization_type_id', 'org_name', 'org_slug', 'org_email', 'org_contact_number', 'org_logo', 'status', 'org_desc', 'other_details', 'org_cat', 'org_type'])]
 class Organization extends Model implements HasName
 {
     use SoftDeletes;
@@ -28,6 +28,7 @@ class Organization extends Model implements HasName
     {
         return [
             'other_details' => 'array',
+            'org_cat' => 'array',
             'type' => OrganizationTypeEnums::class
         ];
     }
@@ -58,67 +59,67 @@ class Organization extends Model implements HasName
 
     public function locations(): HasMany
     {
-        return $this->hasMany(Location::class, 'tenant_id', 'id');
+        return $this->hasMany(Location::class, 'organization_id', 'id');
     }
 
     public function donations(): HasMany
     {
-        return $this->hasMany(Donation::class, 'tenant_id', 'id');
+        return $this->hasMany(Donation::class, 'organization_id', 'id');
     }
 
     public function recipientRequests(): HasMany
     {
-        return $this->hasMany(RecipientRequest::class, 'tenant_id', 'id');
+        return $this->hasMany(RecipientRequest::class, 'organization_id', 'id');
     }
 
     public function deliveries(): HasMany
     {
-        return $this->hasMany(Delivery::class, 'tenant_id', 'id');
+        return $this->hasMany(Delivery::class, 'organization_id', 'id');
     }
 
     public function sustainabilityLogs(): HasMany
     {
-        return $this->hasMany(SustainabilityLog::class, 'tenant_id', 'id');
+        return $this->hasMany(SustainabilityLog::class, 'organization_id', 'id');
     }
 
     public function routes(): HasMany
     {
-        return $this->hasMany(Route::class, 'tenant_id', 'id');
+        return $this->hasMany(Route::class, 'organization_id', 'id');
     }
 
     public function categories(): HasMany
     {
-        return $this->hasMany(Category::class, 'tenant_id', 'id');
+        return $this->hasMany(Category::class, 'organization_id', 'id');
     }
 
     public function foodCategories(): HasMany
     {
-        return $this->hasMany(FoodCategory::class, 'tenant_id', 'id');
+        return $this->hasMany(FoodCategory::class, 'organization_id', 'id');
     }
 
     public function foodImages(): HasMany
     {
-        return $this->hasMany(FoodImage::class, 'tenant_id', 'id');
+        return $this->hasMany(FoodImage::class, 'organization_id', 'id');
     }
 
     public function vehicles() : HasMany
     {
-        return $this->hasMany(Vehicle::class, 'tenant_id', 'id');
+        return $this->hasMany(Vehicle::class, 'organization_id', 'id');
     }
 
     public function vehicleTypes() : HasMany
     {
-        return $this->hasMany(VehicleType::class, 'tenant_id', 'id');
+        return $this->hasMany(VehicleType::class, 'organization_id', 'id');
     }
 
     public function matchRequests() : HasMany
     {
-        return $this->hasMany(MatchRequest::class, 'tenant_id', 'id');
+        return $this->hasMany(MatchRequest::class, 'organization_id', 'id');
     }
 
     public function deliveryStatusLogs() : HasMany
     {
-        return $this->hasMany(DeliveryStatusLog::class, 'tenant_id', 'id');
+        return $this->hasMany(DeliveryStatusLog::class, 'organization_id', 'id');
     }
 
     public function organizationMembers(): HasMany
@@ -127,7 +128,6 @@ class Organization extends Model implements HasName
     }
 
     //Helpers
-
      public function isDonor(): bool
     {
         return $this->type === OrganizationTypeEnums::DONOR;

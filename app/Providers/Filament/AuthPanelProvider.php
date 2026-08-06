@@ -17,7 +17,6 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -38,10 +37,10 @@ class AuthPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Green,
             ])
-            ->font('Montserrat')
+            ->font('Instrument Sans')
             ->spa(hasPrefetching: true)
             ->brandLogo(asset('imgs/gp_logo.png', true))
-            ->brandLogoHeight('7rem')
+            ->brandLogoHeight('5.5rem')
             ->favicon(asset('imgs/gp_logo.png'))
             ->topBar(false)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
@@ -89,7 +88,6 @@ class AuthPanelProvider extends PanelProvider
                     ->mediaSize('40%')
                     ->themeToggle(bottom: '2rem', left: '2rem')
                     ->usingPage(Registration::class))
-
 
                 ->passwordReset(fn ($config) => $config
                     ->mediaPosition(MediaPosition::Right)

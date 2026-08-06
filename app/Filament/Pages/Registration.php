@@ -42,7 +42,7 @@ class Registration extends BaseRegister
         return  Select::make('type')
             ->prefixIcon(Phosphor::HandHeart)
             ->placeholder('Organization Type')
-            ->helperText('Please select an organization type.')
+            ->helperText('Please select what type of organization you represent.')
             ->required()
             ->native(false)
             ->options(OrganizationTypeEnums::class)

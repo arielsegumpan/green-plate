@@ -19,12 +19,14 @@ return new class extends Migration
             $table->string('org_contact_number')->nullable();
             $table->string('org_logo')->nullable();
             $table->enum('status', [
+                'pending',
                 'active',
-                'inactive',
-                'suspended'
-            ])->default('active');
+                'inactive'
+            ])->default('pending');
             $table->text('org_desc')->nullable();
             $table->json('other_details')->nullable();
+            $table->json('org_cat')->nullable();
+            $table->string('org_type')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->index(['org_name', 'org_slug', 'org_email']);
